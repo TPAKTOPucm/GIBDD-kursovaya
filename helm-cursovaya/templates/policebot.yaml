@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: policebot
+  labels:
+    app: policebot
+spec:
+  replicas: {{ .Values.policebot.replicaCount }}
+  selector:
+    matchLabels:
+      app: policebot
+  template:
+    metadata:
+      labels:
+        app: policebot
+    spec:
+      containers:
+      - name: policebot
+        image: "{{ .Values.policebot.image.repository }}:{{ .Values.policebot.image.tag }}"
+        args:
+        - "--port={{ .Values.policebot.port }}"
+        - "--baseUrl={{ .Values.policebot.fineServiceUrl }}"
+        ports:
+        - containerPort: {{ .Values.policebot.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: policebot
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.policebot.port }}
+    targetPort: {{ .Values.policebot.port }}
+  selector:
+    app: policebot

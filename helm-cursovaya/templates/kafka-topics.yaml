@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-kafka-topics
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: create-topics
+        image: bitnami/kafka:{{ .Values.kafka.image.tag | default "latest" }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          kafka-topics.sh --create --if-not-exists \
+            --topic fines \
+            --bootstrap-server {{ .Release.Name }}-kafka:9092 \
+            --partitions 1 \
+            --replication-factor 1
+          
+          kafka-topics.sh --create --if-not-exists \
+            --topic confiscation \
+            --bootstrap-server {{ .Release.Name }}-kafka:9092 \
+            --partitions 1 \
+            --replication-factor 1
+            
+          kafka-topics.sh --create --if-not-exists \
+            --topic violations \
+            --bootstrap-server {{ .Release.Name }}-kafka:9092 \
+            --partitions 1 \
+            --replication-factor 1

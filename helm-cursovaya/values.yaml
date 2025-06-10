@@ -1,0 +1,104 @@
+global:
+  vault:
+    enabled: true
+    address: http://vault:8200
+    role: app-role
+
+fineservice:
+  image:
+    repository: myreg/fineservice
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 80
+  db:
+    name: fines_db
+    username: postgres
+    password: ""
+  vaultSecret: secret/data/fineservice/appsettings
+  priceServiceUrl: http://priceservice:8080
+
+confiscationservice:
+  image:
+    repository: myreg/confiscationservice
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 80
+  db:
+    name: confiscation_db
+    username: postgres
+    password: ""
+  vaultSecret: secret/data/confiscationservice/appsettings
+
+priceservice:
+  image:
+    repository: myreg/priceservice
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  port: 8080
+  bankCode: 1234567
+  accountCode: 12345
+
+policebot:
+  image:
+    repository: myreg/policebot
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  port: 8080
+  fineServiceUrl: http://fineservice:80
+
+notificationservice:
+  image:
+    repository: myreg/notificationservice
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  kafkaConnection: my-app-kafka:9092
+  policeAddress: http://policebot:8080/notifications
+
+camera:
+  image:
+    repository: myreg/camera
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  kafkaConnection: my-app-kafka:9092
+  minInterval: 5
+  maxInterval: 15
+
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        postgresPassword: "postgres"
+  fineservice-db:
+    enabled: true
+    auth:
+      username: "fines_user"
+      password: "fines_pass"
+      database: "fines_db"
+  confiscationservice-db:
+    enabled: true
+    auth:
+      username: "confiscation_user"
+      password: "confiscation_pass"
+      database: "confiscation_db"
+
+kafka:
+  enabled: true
+  nameOverride: my-app-kafka
+  replicaCount: 1
+  autoCreateTopicsEnable: true
+  listeners:
+    client:
+      protocol: PLAINTEXT
+  zookeeper:
+    replicaCount: 1

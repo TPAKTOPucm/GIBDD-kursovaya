@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: camera
+  labels:
+    app: camera
+spec:
+  replicas: {{ .Values.camera.replicaCount }}
+  selector:
+    matchLabels:
+      app: camera
+  template:
+    metadata:
+      labels:
+        app: camera
+    spec:
+      containers:
+      - name: camera
+        image: "{{ .Values.camera.image.repository }}:{{ .Values.camera.image.tag }}"
+        args:
+        - "--kafka_connection={{ .Values.camera.kafkaConnection }}"
+        - "--min_interval={{ .Values.camera.minInterval }}"
+        - "--max_interval={{ .Values.camera.maxInterval }}"

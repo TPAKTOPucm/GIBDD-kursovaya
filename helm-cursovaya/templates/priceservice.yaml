@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: priceservice
+  labels:
+    app: priceservice
+spec:
+  replicas: {{ .Values.priceservice.replicaCount }}
+  selector:
+    matchLabels:
+      app: priceservice
+  template:
+    metadata:
+      labels:
+        app: priceservice
+    spec:
+      containers:
+      - name: priceservice
+        image: "{{ .Values.priceservice.image.repository }}:{{ .Values.priceservice.image.tag }}"
+        args:
+        - "--port={{ .Values.priceservice.port }}"
+        - "--bank={{ .Values.priceservice.bankCode }}"
+        - "--account={{ .Values.priceservice.accountCode }}"
+        ports:
+        - containerPort: {{ .Values.priceservice.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: priceservice
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.priceservice.port }}
+    targetPort: {{ .Values.priceservice.port }}
+  selector:
+    app: priceservice
