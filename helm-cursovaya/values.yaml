@@ -100,5 +100,6 @@ kafka:
   listeners:
     client:
       protocol: PLAINTEXT
+      containerPort: 9092
   zookeeper:
     replicaCount: 1

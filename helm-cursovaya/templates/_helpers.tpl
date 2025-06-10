@@ -60,3 +60,7 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "fineservice.fullname" -}}
+{{- printf "%s-fineservice" .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- end }}
