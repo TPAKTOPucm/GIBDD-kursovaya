@@ -6,7 +6,7 @@ global:
 
 fineservice:
   image:
-    repository: myreg/fineservice
+    repository: tpaktopucm/fineservice
     tag: latest
     pullPolicy: IfNotPresent
   replicaCount: 1
@@ -22,8 +22,8 @@ fineservice:
 
 confiscationservice:
   image:
-    repository: myreg/confiscationservice
-    tag: latest
+    repository: tpaktopucm/confiscationservice
+    tag: 1.0
     pullPolicy: IfNotPresent
   replicaCount: 1
   service:
@@ -37,8 +37,8 @@ confiscationservice:
 
 priceservice:
   image:
-    repository: myreg/priceservice
-    tag: latest
+    repository: tpaktopucm/priceservice
+    tag: 1.0
     pullPolicy: IfNotPresent
   replicaCount: 1
   port: 8080
@@ -47,8 +47,8 @@ priceservice:
 
 policebot:
   image:
-    repository: myreg/policebot
-    tag: latest
+    repository: tpaktopucm/policebot
+    tag: 1.0
     pullPolicy: IfNotPresent
   replicaCount: 1
   port: 8080
@@ -56,8 +56,8 @@ policebot:
 
 notificationservice:
   image:
-    repository: myreg/notificationservice
-    tag: latest
+    repository: tpaktopucm/notificationservice
+    tag: 1.0
     pullPolicy: IfNotPresent
   replicaCount: 1
   kafkaConnection: my-app-kafka:9092
@@ -65,8 +65,8 @@ notificationservice:
 
 camera:
   image:
-    repository: myreg/camera
-    tag: latest
+    repository: tpaktopucm/camera
+    tag: 1.0
     pullPolicy: IfNotPresent
   replicaCount: 1
   kafkaConnection: my-app-kafka:9092
