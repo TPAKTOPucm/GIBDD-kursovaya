@@ -10,5 +10,5 @@ dependencies:
     condition: postgresql.enabled
   - name: kafka
     version: 22.1.5
-    repository: https://mirror.yandex.ru/helm/charts.bitnami.com/Add commentMore actions
+    repository: https://mirror.yandex.ru/helm/charts.bitnami.com/
     condition: kafka.enabled
