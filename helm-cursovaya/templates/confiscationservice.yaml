@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "confiscationservice.fullname" . }}
+  name: confiscationservice
   labels:
     app: confiscationservice
 spec:
