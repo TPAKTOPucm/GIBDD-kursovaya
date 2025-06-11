@@ -13,16 +13,28 @@ spec:
     metadata:
       labels:
         app: fineservice
-      annotations:
-        vault.hashicorp.com/agent-inject: "true"
-        vault.hashicorp.com/role: "{{ .Values.global.vault.role }}"
-        vault.hashicorp.com/agent-inject-secret-appsettings.json: "{{ .Values.fineservice.vaultSecret }}"
-        vault.hashicorp.com/agent-inject-template-appsettings.json: |
-          {{ `{{- with secret "` }}{{ .Values.fineservice.vaultSecret }}{{ `" -}}
-          {{ .Data.data.value }}
-          {{- end }}` }}
     spec:
       initContainers:
+      - name: get-vault-secrets
+          image: vault:1.15.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              vault login -method=kubernetes role=app-role
+              vault kv get -format=json secret/data/fineservice/appsettings > /app/appsettings.json
+              cat /app/appsettings.json
+          volumeMounts:
+            - name: config
+              mountPath: /app/appsettings.json
+              subPath: appsettings.json
+          env:
+            - name: VAULT_ADDR
+              value: "http://vault:8200"
+            - name: KUBE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vault-auth-token
+                  key: token
       - name: migrations
         image: "{{ .Values.fineservice.image.repository }}:{{ .Values.fineservice.image.tag }}"
         command: ["dotnet", "ef", "database", "update"]
